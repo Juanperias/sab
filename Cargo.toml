@@ -1,0 +1,15 @@
+[package]
+name = "sab"
+version = "0.1.0"
+edition = "2024"
+
+[workspace]
+members = ["sab-read"]
+
+[workspace.dependencies]
+byteorder = "1.5.0"
+
+[dependencies]
+bitflags = "2.13.0"
+byteorder.workspace = true
+thiserror = "2.0.18"
