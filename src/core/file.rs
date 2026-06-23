@@ -4,6 +4,7 @@ use byteorder::{ReadBytesExt, WriteBytesExt};
 
 use crate::{SabError, core::{header::SabHeader, section::SectionEntry}};
 
+#[derive(Debug)]
 pub struct SabFile {
     pub header: SabHeader,
     pub section_table: Vec<SectionEntry>,

@@ -4,14 +4,14 @@ use byteorder::{LittleEndian, ReadBytesExt, WriteBytesExt};
 use crate::SabError;
 
 #[repr(u8)]
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum Endian {
     Little = 0,
     Big = 1,
 }
 
 #[repr(u8)]
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum Machine {
     None = 0,
     Riscv32 = 1,
@@ -21,6 +21,7 @@ pub enum Machine {
     Jmc32 = 5,
 }
 
+#[derive(Debug)]
 #[repr(C, align(8))]
 pub struct SabHeader {
     pub magic: [u8; 3],
@@ -116,7 +117,7 @@ impl SabHeader {
         stream.write_u8(self.machine as u8)?;
         stream.write_u16::<LittleEndian>(self.entry_symbol)?;
         stream.write_u32::<LittleEndian>(self.section_num)?;
-        stream.write(&self.padding);
+        stream.write(&self.padding)?;
         stream.write_u64::<LittleEndian>(self.symbol_num)?;
         stream.write_u64::<LittleEndian>(self.relocation_num)?;
         stream.write_u64::<LittleEndian>(self.data_size)?;

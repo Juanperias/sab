@@ -2,7 +2,7 @@ use byteorder::{LittleEndian, ReadBytesExt, WriteBytesExt};
 
 use crate::SabError;
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq, Eq, Debug)]
 #[repr(u8)]
 pub enum SectionKind {
     Null = 0x0,
@@ -11,9 +11,11 @@ pub enum SectionKind {
     RoData = 0x3,
     UninitializedData = 0x4,
     Other = 0x5,
+    Tag = 0x6,
 }
 
 bitflags::bitflags! {
+    #[derive(Debug, Clone)]
     pub struct SectionFlags: u8 {
         const R = 0b0000_0001;
         const W = 0b0000_0010;
@@ -31,6 +33,7 @@ bitflags::bitflags! {
     } 
 }
 
+#[derive(Debug)]
 pub struct SectionEntry {
     pub vaddr: u64,
     pub data_offset: u64,
@@ -39,7 +42,7 @@ pub struct SectionEntry {
     pub name_len: u32,
     pub kind: SectionKind,
     pub flags: SectionFlags,
-    _reserved: [u8; 6]
+    pub _reserved: [u8; 6]
 }
 
 impl Default for SectionEntry {
@@ -74,6 +77,7 @@ impl SectionEntry {
             3 => SectionKind::RoData,
             4 => SectionKind::UninitializedData,
             5 => SectionKind::Other,
+            6 => SectionKind::Tag,
             n => return Err(SabError::DecodeError(format!("Invalid section kind {n}"))),
         };
 
