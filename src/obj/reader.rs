@@ -16,6 +16,14 @@ pub struct Section {
 pub struct SabObjReader(HashMap<String, Section>);
 
 impl SabObjReader {
+    pub fn get_section(&self, name: &str) -> Option<&Section> {
+        self.0.get(name)
+    }
+
+    pub fn get_section_mut(&mut self, name: &str) -> Option<&mut Section> {
+        self.0.get_mut(name)
+    }
+
     pub fn new<T: ReadBytesExt>(stream: &mut T) -> Result<Self, SabError> {
         let file = SabFile::read(stream)?;
 
